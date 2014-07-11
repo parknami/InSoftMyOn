@@ -9,10 +9,7 @@ import java.nio.channels.SelectionKey;
 import java.nio.channels.Selector;
 import java.nio.channels.ServerSocketChannel;
 import java.nio.channels.SocketChannel;
-import java.util.HashMap;
 import java.util.Iterator;
-import java.util.Set;
-import java.util.Vector;
 
 public class ServerSocketManager {
 
@@ -52,8 +49,7 @@ public class ServerSocketManager {
 
 		try {
 			while (selector.select() > 0 ){
-				Set keys = selector.selectedKeys();
-				Iterator<SelectionKey> iter = keys.iterator();
+				Iterator<SelectionKey> iter = selector.selectedKeys().iterator();
 				while (iter.hasNext()){
 					try{
 						SelectionKey selected = iter.next();
@@ -64,13 +60,12 @@ public class ServerSocketManager {
 							ch.finishConnect();
 							ch.configureBlocking(false);
 
-							ServerSocketConn socketConn = new ServerSocketConn(ch);
+							ServerSocketConn socketConn = new ServerSocketConn(ch,ServerSessionManager.getInstance().getSessionID());
 							socketConn.start();
 							
-							ServerSessionManager sessionMg = ServerSessionManager.getInstance();
-							//sessionMg.setAddSessionId(socketConn);
-							
-							sessionMg.setAddSessionId(ch);
+							/*ServerSessionManager sessionManager = ServerSessionManager.getInstance();
+							sessionManager.setAddSessionId(socketConn);*/
+						
 						}
 					}
 					catch(Exception e){

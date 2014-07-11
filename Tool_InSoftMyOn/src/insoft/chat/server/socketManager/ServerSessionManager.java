@@ -1,38 +1,37 @@
 package insoft.chat.server.socketManager;
 
-import java.nio.channels.SocketChannel;
 import java.util.HashMap;
 
 public class ServerSessionManager {
-	private int session = 0;
+	private int sessionId = 0;
 	private static ServerSessionManager sessionManager = new ServerSessionManager();
-	private static HashMap <Integer , ServerSocketConn> socketConn  = new HashMap<Integer , ServerSocketConn>();
-	private static HashMap <Integer , SocketChannel> scChannel  = new HashMap<Integer , SocketChannel>();
-	private ServerSessionManager() {}
+	HashMap <Integer , ServerSocketConn> socketConn = new HashMap<Integer , ServerSocketConn>();
+	
+	public ServerSessionManager() {
+
+	}
 	
 	public static ServerSessionManager getInstance() {
 		return sessionManager;
 	}
-	
-	public synchronized int sessionId(){
-		if (session > Integer.MAX_VALUE)
-			session = 0 ;
-		
-		return session ++ ;
-	}
-	
-	public void setAddSessionId(ServerSocketConn conn){
+
+/*	public void setAddSessionId(ServerSocketConn conn){
 		if (conn != null){
+			System.out.println("session manager conn:"+conn.getId());
 			socketConn.put(sessionId(), conn);
 		}
+	}*/
+	
+	public int getSessionID(){
+		if (sessionId > Integer.MAX_VALUE)
+			sessionId = 0 ;
+		
+		return sessionId ++ ;
 	}
-
-	public void setAddSessionId(SocketChannel ch) {
-		if (ch != null){
-			scChannel.put(sessionId(), ch);
+	
+	public void sessionDelete(int sessionId){
+		synchronized (socketConn) {
+			socketConn.remove(sessionId);
 		}
-		System.out.println("session size :"+ scChannel.size());
 	}
-	
-	
 }
