@@ -3,18 +3,14 @@ package insoft.chat.server.socketManager;
 import insoft.chat.server.taskmanager.TaskQueueManager;
 import insoft.openmanager.message.ClientPacket;
 import insoft.openmanager.message.Message;
-
-import java.io.IOException;
 import java.nio.channels.SelectionKey;
 import java.nio.channels.Selector;
 import java.nio.channels.SocketChannel;
 import java.util.Iterator;
 
-
 public class ServerSocketConn extends Thread{
 	private SocketChannel channel = null;
 	private Selector selector = null;
-	private RspQueueManager rspQueue = RspQueueManager.getInstance();
 	public ServerSessionManager sessionManager ;
 	int sessionID = 0 ; 
 	
@@ -28,11 +24,15 @@ public class ServerSocketConn extends Thread{
 	public SocketChannel getChannel() {
 		return channel;
 	}
+	
+	public void write(Message writeMsg) throws Exception  {
+
+		ClientPacket clientPacket = new ClientPacket();
+		clientPacket.writeClientPacket(channel, writeMsg);
+	}
 
 	public void run (){
-		//TaskQueueManager queueManager = TaskQueueManager.getInstance();
-
-
+		TaskQueueManager queueManager = TaskQueueManager.getInstance();
 		try{
 			while (true){
 				selector.select();
@@ -48,16 +48,18 @@ public class ServerSocketConn extends Thread{
 						try {
 							ClientPacket clientPacket = new ClientPacket();
 							Message readMsg = clientPacket.readClientPacket(channel);
-							System.out.println("message:"+readMsg);
+							System.out.println("Read Client message:"+readMsg);
+							queueManager.addReqQueue(readMsg , sessionID);
+							
 
-							Message writeMsg = readMsg.cloneMessage(readMsg.getMessageName());
+				/*			Message writeMsg = readMsg.cloneMessage(readMsg.getMessageName());
 							writeMsg.setInteger("session_id", sessionID);
 							writeMsg.setString("return_msg","OK");
 							writeMsg.setInteger("return_code", 1);
 
 							System.out.println("writeMsg:"+writeMsg);
 							clientPacket.write(channel, writeMsg);
-
+*/
 							//queueManager.addReqQueue(readMsg);
 						} catch(Exception e) {
 							System.out.println("conn 로그아웃");
@@ -72,11 +74,9 @@ public class ServerSocketConn extends Thread{
 			}
 		}
 		catch (Exception e){
-			System.out.println("conn 마지막 로그아웃");
 			close();
 			e.printStackTrace();
 		}
-
 	}
 
 	public void close() {

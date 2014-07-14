@@ -54,7 +54,6 @@ public class ServerSocketManager {
 					try{
 						SelectionKey selected = iter.next();
 						if (selected.isValid() && selected.isAcceptable()){
-							System.out.println("accept");
 							SocketChannel ch = ((ServerSocketChannel) selected.channel()).accept();
 
 							ch.finishConnect();
@@ -63,9 +62,7 @@ public class ServerSocketManager {
 							ServerSocketConn socketConn = new ServerSocketConn(ch,ServerSessionManager.getInstance().getSessionID());
 							socketConn.start();
 							
-							/*ServerSessionManager sessionManager = ServerSessionManager.getInstance();
-							sessionManager.setAddSessionId(socketConn);*/
-						
+							ServerSessionManager.getInstance().setSocket(socketConn);
 						}
 					}
 					catch(Exception e){
