@@ -45,6 +45,8 @@ public class TaskQueueManager extends Thread {
 							RequestInfo info = (RequestInfo)buffer.get(i);
 							String reqMsgName = info.reqMessage.getMessageName();
 							ServerTask task = taskManager.getTask(reqMsgName);
+							if (task == null)
+								continue;
 
 							task.setRequestInfo(info);
 							executor.execute(task);

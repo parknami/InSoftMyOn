@@ -2,13 +2,14 @@ package insoft.chat.server.socketManager;
 
 import java.nio.channels.SocketChannel;
 import java.util.Vector;
+
 import insoft.openmanager.message.ClientPacket;
 import insoft.openmanager.message.Message;
 
 public class RspQueueManager extends Thread{
 	public static RspQueueManager rspQueueManager = new RspQueueManager();
 	private Vector<ResponseInfo> responseQueue = new Vector<ResponseInfo>();
-	public ServerSessionManager sessionMsg = null;
+	public ServerSessionManager sessionMsg = ServerSessionManager.getInstance();
 
 	private RspQueueManager(){
 		start();
@@ -38,10 +39,29 @@ public class RspQueueManager extends Thread{
 				rspQueue.addAll(responseQueue);
 				responseQueue.clear();
 			}
-			//System.out.println("rspQueue size:"+rspQueue.size());
 			for (ResponseInfo rspInfo : rspQueue) {
 				System.out.println("rspQueue size:"+rspQueue.size());
 				try
+				{
+					SocketChannel channel = rspInfo.conn.getChannel();
+					Message rspMsg = rspInfo.rspMessage;
+
+					clientPacket.writeClientPacket(channel, rspMsg);	
+				} 
+				catch(Exception e){	
+					e.printStackTrace();
+				}
+				/*for (ServerSocketConn conn :  sessionMsg.socketConn.values()){
+					SocketChannel channel = conn.getChannel();
+					Message rspMsg = rspInfo.rspMessage;
+					try {
+						clientPacket.writeClientPacket(channel, rspMsg);
+					} catch (Exception e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}	*/
+			}
+			/*	try
 				{
 					SocketChannel channel = rspInfo.conn.getChannel();
 					Message rspMsg = rspInfo.rspMessage;
@@ -49,8 +69,8 @@ public class RspQueueManager extends Thread{
 				} 
 				catch(Exception e){	
 
-				}
-			}
+				}*/
+
 
 			try {
 				Thread.sleep(100);

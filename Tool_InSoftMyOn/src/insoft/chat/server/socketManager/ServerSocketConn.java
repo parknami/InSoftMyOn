@@ -49,6 +49,7 @@ public class ServerSocketConn extends Thread{
 							ClientPacket clientPacket = new ClientPacket();
 							Message readMsg = clientPacket.readClientPacket(channel);
 							System.out.println("Read Client message:"+readMsg);
+							System.out.println("session id : " + sessionID);
 							queueManager.addReqQueue(readMsg , sessionID);
 							
 

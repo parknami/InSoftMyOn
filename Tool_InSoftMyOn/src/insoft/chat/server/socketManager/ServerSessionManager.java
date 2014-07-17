@@ -8,8 +8,8 @@ public class ServerSessionManager {
 	HashMap <Integer , ServerSocketConn> socketConn = new HashMap<Integer , ServerSocketConn>();
 	HashMap <String , Integer> userSessionID = new HashMap<String , Integer>();
 
-	public ServerSessionManager() {
-
+	private  ServerSessionManager() {
+		
 	}
 
 	public static ServerSessionManager getInstance() {
@@ -18,7 +18,7 @@ public class ServerSessionManager {
 
 	public void setSocket(ServerSocketConn conn){
 		if (conn != null){
-			socketConn.put(sessionId, conn);
+			socketConn.put(conn.sessionID, conn);
 		}
 	}
 	

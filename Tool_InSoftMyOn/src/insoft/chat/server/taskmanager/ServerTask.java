@@ -30,6 +30,7 @@ public abstract class ServerTask  implements Runnable {
 			rspMsg  = execute();
 		}
 		catch(Exception e){
+			e.printStackTrace();
 			rspMsg = new Message(requestInfo.reqMessage.getMessageName());
 			rspMsg.setString("return_msg", e.toString());
 			rspMsg.setInteger("return_code", 0);
