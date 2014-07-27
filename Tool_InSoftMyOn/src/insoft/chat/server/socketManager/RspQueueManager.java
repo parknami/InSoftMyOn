@@ -61,16 +61,6 @@ public class RspQueueManager extends Thread{
 						e.printStackTrace();
 					}	*/
 			}
-			/*	try
-				{
-					SocketChannel channel = rspInfo.conn.getChannel();
-					Message rspMsg = rspInfo.rspMessage;
-					clientPacket.writeClientPacket(channel, rspMsg);	
-				} 
-				catch(Exception e){	
-
-				}*/
-
 
 			try {
 				Thread.sleep(100);

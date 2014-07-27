@@ -51,17 +51,7 @@ public class ServerSocketConn extends Thread{
 							System.out.println("Read Client message:"+readMsg);
 							System.out.println("session id : " + sessionID);
 							queueManager.addReqQueue(readMsg , sessionID);
-							
 
-				/*			Message writeMsg = readMsg.cloneMessage(readMsg.getMessageName());
-							writeMsg.setInteger("session_id", sessionID);
-							writeMsg.setString("return_msg","OK");
-							writeMsg.setInteger("return_code", 1);
-
-							System.out.println("writeMsg:"+writeMsg);
-							clientPacket.write(channel, writeMsg);
-*/
-							//queueManager.addReqQueue(readMsg);
 						} catch(Exception e) {
 							System.out.println("conn ·Î±×¾Æ¿ô");
 							System.out.println("session_id:"+sessionID);
