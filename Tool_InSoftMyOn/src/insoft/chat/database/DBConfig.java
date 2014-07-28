@@ -21,7 +21,8 @@ public class DBConfig {
 		Properties dbProp = new Properties();
 		
 		try {
-			dbProp.load(new FileInputStream(HOME + File.separator + "config" + File.separator + PROPERTIES));
+			//dbProp.load(new FileInputStream(HOME + File.separator + "config" + File.separator + PROPERTIES));
+			dbProp.load(new FileInputStream("D:\\git_repository\\InSoftMyOn\\Tool_InSoftMyOn\\build\\config\\"+PROPERTIES));
 			
 			DRIVER = dbProp.getProperty("DRIVER");
 			URL = dbProp.getProperty("URL");
@@ -36,7 +37,6 @@ public class DBConfig {
 		} finally {
 			dbProp.clear();
 		}
-		
 	}
 	
 }

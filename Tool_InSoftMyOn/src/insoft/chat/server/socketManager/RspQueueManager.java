@@ -3,6 +3,7 @@ package insoft.chat.server.socketManager;
 import java.nio.channels.SocketChannel;
 import java.util.Vector;
 
+import insoft.chat.server.chatManager.ChatRoomManager;
 import insoft.openmanager.message.ClientPacket;
 import insoft.openmanager.message.Message;
 
@@ -40,31 +41,55 @@ public class RspQueueManager extends Thread{
 				responseQueue.clear();
 			}
 			for (ResponseInfo rspInfo : rspQueue) {
-				System.out.println("rspQueue size:"+rspQueue.size());
-				try
-				{
+				String messageName = rspInfo.rspMessage.getMessageName();
+				if (messageName.equals("LOGIN") ||messageName.equals("GET_USERS") || messageName.equals("REG_USER")){
+					
 					SocketChannel channel = rspInfo.conn.getChannel();
 					Message rspMsg = rspInfo.rspMessage;
 
-					clientPacket.writeClientPacket(channel, rspMsg);	
-				} 
-				catch(Exception e){	
-					e.printStackTrace();
-				}
-				/*for (ServerSocketConn conn :  sessionMsg.socketConn.values()){
-					SocketChannel channel = conn.getChannel();
-					Message rspMsg = rspInfo.rspMessage;
 					try {
 						clientPacket.writeClientPacket(channel, rspMsg);
-					} catch (Exception e) {
-						// TODO Auto-generated catch block
+					} 
+					catch (Exception e) {
 						e.printStackTrace();
-					}	*/
-			}
+					}	
+				}
+				else{
+					
+					int chatRoomID = rspInfo.rspMessage.getInteger("chat_room_id");
+					
+					try
+					{
+						if (ChatRoomManager.hChatRoom.get(chatRoomID) != null){
 
-			try {
-				Thread.sleep(100);
-			} catch(Exception e) {}
+							Vector<Message> vChat = ChatRoomManager.hChatRoom.get(chatRoomID) ;
+							System.out.println(vChat.size());
+							for (Message msg : vChat){
+
+								String userId = msg.getString("user_id");
+
+								Integer userSessionID = sessionMsg.userSessionID.get(userId);
+								System.out.println("userSessionID:"+userSessionID);
+								ServerSocketConn socketConn= sessionMsg.socketConn.get(userSessionID);
+
+								try {
+									clientPacket.writeClientPacket(socketConn.getChannel(),  rspInfo.rspMessage);
+								} 
+								catch (Exception e) {
+									e.printStackTrace();
+								}
+							}
+						}
+					}
+					catch(Exception e){	
+						e.printStackTrace();
+					}
+				}
+				try {
+					Thread.sleep(100);
+				}
+				catch(Exception e) {}
+			}
 		}
 	}
 }

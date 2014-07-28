@@ -9,11 +9,11 @@ public abstract class ServerTask  implements Runnable {
 	protected RequestInfo requestInfo = null;
 	private RspQueueManager rspManager = RspQueueManager.getInstance();
 	private ServerSessionManager sessioManager = ServerSessionManager.getInstance();
-	
+
 	public void setRequestInfo(RequestInfo info) {
 		this.requestInfo = info;
 	}
-	
+
 	public RequestInfo getRequestInfo() {
 		 return this.requestInfo;
 	}
@@ -38,7 +38,7 @@ public abstract class ServerTask  implements Runnable {
 
 		rspManager.addResponseMessage(sessioManager.getSocketConn(rspMsg.getInteger("session_id")), rspMsg);
 	}
-	
+
 	abstract public String getName();
 	abstract public ServerTask newInstance();
 	abstract public Message execute();

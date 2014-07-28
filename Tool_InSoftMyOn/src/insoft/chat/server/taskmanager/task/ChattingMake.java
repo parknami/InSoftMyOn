@@ -1,29 +1,34 @@
 package insoft.chat.server.taskmanager.task;
 
-import insoft.chat.server.chatManager.ChatRoomManager;
+import java.util.Vector;
+
 import insoft.chat.server.taskmanager.ServerTask;
+import insoft.chat.server.chatManager.*;
 import insoft.openmanager.message.Message;
 
-public class SendMessage extends ServerTask {
+public class ChattingMake extends ServerTask {
 	ChatRoomManager chatManager = ChatRoomManager.getInstance();
 	@Override
 	public String getName() {
 		// TODO Auto-generated method stub
-		return "SEND_MESSAGE";
+		return "CHATTING";
 	}
 
 	@Override
 	public ServerTask newInstance() {
 
-		return new SendMessage();
+		return new ChattingMake();
 	}
 
 	@Override
 	public Message execute() {
-	    int socketSessionId = requestInfo.socketSessionld ;
-
+		Vector<Message> userList = requestInfo.reqMessage.getVector("users_list");
+		
+		int chatRoomID = chatManager.addChatRoomId(userList);
+	 	    
 	    Message writeMsg = requestInfo.reqMessage.cloneMessage(requestInfo.reqMessage.getMessageName());
-	    writeMsg.setInteger("session_id", socketSessionId);
+	    writeMsg.setInteger("chat_room_id", chatRoomID);
+	    writeMsg.setInteger("session_id",requestInfo.socketSessionld);
 	    writeMsg.setInteger("return_code",1);
 	    writeMsg.setString("return_msg","");
 
