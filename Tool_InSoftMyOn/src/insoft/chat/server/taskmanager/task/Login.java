@@ -25,7 +25,7 @@ public class Login extends ServerTask{
 		String userId =  requestInfo.reqMessage.getString("user_id");
 		sessionManager.setUserId(userId,socketSessionId);
 		
-		Message writeMsg = new Message("LOGIN");
+		Message writeMsg = requestInfo.reqMessage.cloneMessage(requestInfo.reqMessage.getMessageName());
 		writeMsg.setInteger("session_id", socketSessionId);
 		writeMsg.setInteger("return_code", 1);
 		writeMsg.setString("return_msg", "");
